@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ismy-Web Sederhana (UTS)</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    
+   <script src="./bundle.js"></script>
+	
+   <link rel="stylesheet" type="text/css" href="leaflet.css">
+   <script src="leaflet.js"></script>
+    </head> 
+    <body style="background-color: #eee5be;">   
+    <nav>
+    <!--PENGATURAN TAMPILAN PETA-->
+    <center><style>
+        #map{
+            width: 3000px;
+            height: 700px;
+        }
+    </style></center>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Web</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="index.html">Home<span class="sr-only"></span></a>
+            </li>
+            <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Menu Lain</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="https://maps.app.goo.gl/Qh7hBPEHAF68GfSb7" target="_blank">Fakultas Teknik UGM</a></li>
+              <li><a class="dropdown-item" href="https://maps.app.goo.gl/ScyezP5kdAV95DBTA" target="_blank">Fakultas MIPA UGM</a></li>
+              <li><a class="dropdown-item" href="https://maps.app.goo.gl/1aTo8WKAuGbkt8VF9" target="_blank">Fakultas Kedokteran, Kesehatan Masyarakat dan Keperawatan UGM</a></li>
+              <li><a class="dropdown-item" href="https://maps.app.goo.gl/rNTSFRgBAzUdC5zAA" target="_blank" >Fakultas Psikologi UGM</a></li>
+              <li><a class="dropdown-item" href="https://maps.app.goo.gl/BtjP7ynywcCxkwvn7" target="_blank">Fakultas Farmasi UGM</a></li>
+              <li><a class="dropdown-item" href="https://geodesi.ugm.ac.id/" target="_blank">Website Resmi Geodesi</a></li>
+            </ul>
+        </li>
+        </ul>
+        
+        <form class="form-inline my-2 my-lg-0">
+        <button class="btn btn-outline-success my-2 my-sm-0"
+                onclick="cari()">Lokasi saya</button>
+        </form>
+        </div>
+    </nav>
+
+    <!--Kontainer Peta-->
+    <div id="map"></div>
+
+    <!--Peta-->
+
+    <script>
+        var map = L.map('map',{
+        center: [-7.767283390517557, 110.37961721518204],
+        zoom: 15
+        });
+        
+        var esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS UserCommunity'
+        }).addTo(map);
+
+        var carto = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution:'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+            subdomains: 'abcd', maxZoom: 19
+        });
+        
+        var OSM = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        });
+
+        var osmHOT = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors, Tiles style by Humanitarian OpenStreetMap Team hosted by OpenStreetMap France'
+        });
+
+        var teknik     =  L.marker([-7.765083212733243, 110.37251169999999])
+            .bindPopup('<center><img src="https://lh3.googleusercontent.com/p/AF1QipMz7oVhVwt-xW5isb6AI5DgJwmhtO5s5bX4MD91=w408-h306-k-no" width="150px" haight ="100px" title ="Fakultas Teknik UGM" alt="Fakultas Teknik UGM UGM"><h1>Fakultas Teknik UGM</h1> <a href="https://maps.app.goo.gl/Qh7hBPEHAF68GfSb7" target="_blank">Link Lokasi </a></center>')
+            .addTo(map)
+		    wisdompark  =  L.marker([-7.766732887683579, 110.3761775576727])
+            .bindPopup('<center><img src="https://lh3.googleusercontent.com/p/AF1QipNiwvdhyKXKCZj8_kYV9s_U3y9JXoQMXHGm74-b=w408-h306-k-no" width="150px" height="100px title="Fakultas MIPA UGM" alt="Fakultas MIPA UGM"><h1>Fakultas MIPA UGM</h1> <a href="https://maps.app.goo.gl/ScyezP5kdAV95DBTA" target="_blank">Link Lokasi </a> </center>')
+            .addTo(map),
+		    balairung   =  L.marker([-7.769130350196164, 110.37409168650906])
+            .bindPopup('<center><img src="https://lh3.googleusercontent.com/p/AF1QipOHEpzK3rZxZ2Z4owGp6lODupXXJ5s8Yp2zgvDX=w408-h306-k-no" width="150px" height="100px title="Fakultas Kedokteran, Kesehatan Masyarakat dan Keperawatan UGM" alt="Fakultas Kedokteran, Kesehatan Masyarakat dan Keperawatan UGM"><h1>Fakultas Kedokteran, Kesehatan Masyarakat dan Keperawatan UGM</h1><a href="https://maps.app.goo.gl/1aTo8WKAuGbkt8VF9" target="_blank">Link Lokasi </a></center>')
+            .addTo(map),
+		    GSP         =  L.marker([-7.772042574780563, 110.37997995154832])
+            .bindPopup('<center><img src="https://lh3.googleusercontent.com/p/AF1QipNyx49RfHfCOwI4dGcTo57ZCkgwqJY56xsNWdYn=w408-h295-k-no" width="150px" height="100px title="Fakultas Psikologi UGM" alt="Fakultas Psikologi UGM"><h1>Fakultas Psikologi UGM</h1><a href="https://maps.app.goo.gl/rNTSFRgBAzUdC5zAA" target="_blank">Link Lokasi </a></center>')
+            .addTo(map);
+            farmasi      =  L.marker([-7.76891716370444, 110.37627519573009])
+            .bindPopup('<center><img src="https://lh3.googleusercontent.com/p/AF1QipP70-pxfewO0K4gzdNbCciJC-cnKMzmj0Ogo94=w408-h306-k-no" width="150px" height="100px title="Fakultas Farmasi UGM" alt="Fakultas Farmasi UGM"><h1>Fakultas Farmasi UGM</h1><a href="https://maps.app.goo.gl/BtjP7ynywcCxkwvn7" target="_blank">Link Lokasi </a></center>')
+            .addTo(map);
+
+	    var jogja = L.layerGroup([geodesi, wisdompark, balairung, GSP, farmasi]);
+        
+        var baseMaps = {
+            "Citra Satelit": esri,
+            "Peta Carto": carto,
+            "OSM": OSM,
+        };
+        
+        var overlayMaps = {"Fakultas di Universitas Gadjah Mada": jogja};
+
+        L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+        L.Control.geocoder().addTo(map);
+	
+	    L.easyPrint({
+		    title: 'My awesome print button',
+		    position: 'topright',
+		    sizeModes: ['A4Portrait', 'A4Landscape']
+	    }).addTo(map);
+	
+	    var graphicScale = L.control.graphicScale({
+		    fill: "fill",
+		    doubleLine: "true",
+		    showSubunits: "true"
+	    }).addTo(map);
+        
+
+        function cari(){
+		    alert('izinkan mengakses lokasi?');
+		    map.locate({setView: true, maxZoom: 16});
+		
+		    function onLocationFound(e) {
+			    var radius = e.accuracy / 2;
+
+			L.marker(e.latlng).addTo(map)
+				.bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+			L.circle(e.latlng, radius).addTo(map);
+		}
+		map.on('locationfound', onLocationFound);
+	    }
+
+        var popup = L.popup();
+        function onMapClick(e) {
+            popup
+                .setLatLng(e.latlng)
+                .setContent("Koordinat" + e.latlng.toString())
+                .openOn(map);
+        }
+        map.on('click', onMapClick);
+
+        L.geoJSON(jogjageojson,{
+            style: function(feature) {
+                switch (feature.properties.KABUPATEN) {
+                    case 'Gunung Kidul': return {color: "#ff9900"};
+                    case 'Sleman': return {color: "red"};
+                    case 'Bantul': return {color: "blue"};
+                    case 'Yogyakarta': return {color: "green"};
+                    case 'Kulon Progo': return {color: "magenta"};
+                }
+            },
+            onEachFeature: function (feature, layer) {
+                layer.bindPopup(
+                'Kecamatan adalah ' +
+                '<strong>' +
+                feature.properties.KECAMATAN +
+                '</strong>'
+                );
+            }
+        }).addTo(map);
+
+        L.control.scale().addTo(map);
+        </script>
+        
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous">
+</script>
+
+<br><br>
+<hr>
+<!--Esai gagasan berbasis WebGIS-->
+<center><h1 id="esai">Essai Kegiatan Praktikum Sistem Informasi Geografis Berbasis WEB</h1></center>
+<div id="esaiteks" width="1000px" height="500px">
+<p style="text-align: justify;">
+    Sistem Informasi Geografis (SIG) adalah sistem berbasis komputer yang digunakan untuk memanipulasi, menganalisis, menyimpan, dan menganalisis informasi geografis. 
+    SIG berbasis web adalah SIG yang diakses melalui internet dan dapat diakses dari berbagai perangkat seperti komputer, tablet, atau smartphone. 
+    SIG berbasis web terdiri dari beberapa komponen seperti data spasial, data atribut, perangkat keras, perangkat lunak, dan pengguna. SIG berbasis web dapat 
+    digunakan untuk melakukan berbagai analisis seperti analisis klasifikasi, analisis overlay, analisis networking, analisis buffering, dan analisis lainnya. 
+    Penggunaan SIG berbasis web memiliki beberapa keuntungan seperti pengumpulan data yang hemat tempat, mudah dalam pengolahan data, dan dapat diakses dari berbagai perangkat. 
+    SIG berbasis web sangat berguna dalam berbagai bidang seperti pariwisata, industri, dan lainnya.
+</p>
+<br>
+<p style="text-align: justify;">
+    Pada Program Studi Teknik Geodesi UGM terdapat mata kuliah pilihan Praktikum Sistem Informasi Geografis Berbasis Web. 
+    Pada minggu pertama kuliah, belum dilaksanakan praktikum karena dosen pengampu berhalangan hadir.
+    Pada minggu kedua, materi kuliah Praktikum SIG Web adalah pengenalan HTML, CSS, dan JavaScript. Pada minggu ini dilakukan pembuatan heading, pembuatan teks bergerak, teks yang memuat link yang mengarah ke website resmi teknik geodesi, pembuatan tulisan miring, pembuatan tulisan bold atau tebal, pembuatan tulisan berwarna, memunculkan gambar, pembuatan tabel dan pembuatan formulir.
+    Pada minggu ketiga, mahasiswa melakukan presentasi mengenai praktikum yang telah dilakukan pada minggu sebelumnya.
+    Pada minggu keempat, mahasiswa melakukan praktikum berupa pembuatan index, menghitung bilangan faktorial, validasi input (username & password, nama & usia), menghitung banyaknya bilangan prima dan bilangan fibonaci.
+    Pada minggu kelima, mahasiswa melakukan praktikum membuat resume.
+    Pada minggu keenam, mahasiswa melakukan praktikum menggunakan leaflet js.
+    Pada minggu terakhir yaitu minggu ketujuh, mahasiswa melakukan praktikum berupa pembuatan peta dengan Leaflet JS dan plugin pendukung.
+    Semua hasil praktikum atau halaman web ditampilkan melalui link dari Pages GitHub yang dapat diakses secara umum.
+</p>
+<br>
+</div> 
+<!--Tugas M1 (1)-->
+<div id="M1">
+	<center><h1><p style="color:rgb(79, 120, 61)"></p>Berisi link mengarah ke alamat Website Resmi Geodesi, Tulisan miring, Tulisan Tebal, Tulisan Berwarna, dan Tabel</h1></center</p></center> <!--merupakan first heading pada sebuah teks-->
+	</div>
+    <br>
+	<a href="https://geodesi.ugm.ac.id/" target="_blank">Link ini mengarah ke Website Teknik Geodesi</a> <!--membuat hyperlink berdasarkan link eksternal-->
+	<br><br> <!--breakline-->
+	<i>Tulisan ini miring </i> <!--membuat tulisan jadi miring--> <b>dan yang ini tebal.</b> <!--membuat tulisan jadi tebal-->
+
+	<p style="color:red">Sedangkan, tulisan ini berwarna merah.</p> <!--menggunakan inline style untuk mengubah teks paragraf menjadi warna merah--> <!---->
+    <p style="color:rgb(55, 0, 255)">Selain itu, tulisan ini berwarna biru.</p> <!--menggunakan inline style untuk mengubah teks paragraf menjadi warna merah--> <!---->
+	<hr style="margin-left: 0%;" width="535px"> 
+	<!--script membuat garis horizontal dengan mengatur antara jarak garis horizontal dansisi kiri html sebesar 0% dan panjang garis sebesar 535px-->
+    <style>
+        table, th, td {
+          border:1px solid black;
+        }
+        </style>
+    <table style="width:40%">
+        <tr>
+          <th>Nama</th>
+          <th>NIM</th>
+        </tr>
+        <tr>
+          <td>Ismy Dwi Utami</td>
+          <td>22/506067/TK/55426</td>
+        </tr>
+      </table> 
+      <br>
+
+    <!--membuat form-->
+<center><h1 id="M3">Formulir Validasi Pekerjaan Selesai</h1></center>
+<br>
+<p>Masukkan nama, password, dan alamat email anda : </p>
+Nama     : <input type="text" id="namaanda" style="margin-left: 34px; margin-bottom: 10px;"> <br>
+E-mail: <input type="email" id="email" style="margin-left: 32px; margin-bottom: 10px"> <br>
+Password : <input type="password" id="pass" style="margin-left: 10px; margin-bottom: 10px"> <br>
+
+<button onclick="tekan()">Klik!</button>
+
+<script>
+    function tekan(){
+        var pw, check, text;
+        var check = "Selesai";
+        pw = document.getElementById("pass").value;
+
+        if (pw === check) {
+            text = "Password benar!";
+            alert(text);
+        }
+
+        else{
+            text = "error";
+            alert(text);
+        }
+    }
+</script>
+<hr>
+<br><br>
+<hr>
+
+</script>
+</body>
+</html>
